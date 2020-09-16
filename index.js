@@ -11,7 +11,7 @@ const router = require('./router');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server);
+const io = socketio(server,  {transports: ['websocket', 'polling', 'flashsocket']});
 
 app.use(router);
 app.use(cors());
