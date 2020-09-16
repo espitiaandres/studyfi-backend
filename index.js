@@ -42,6 +42,8 @@ io.on('connection', (socket) => {
         if (error) {
             socket.emit('duplicate', { duplicate: true });
             return callback(error);
+        } else {
+            socket.emit('duplicate', { duplicate: false });
         }
 
         socket.emit('message', { user: "admin", text: `${user.name}, welcome to the ${user.room} chat room! :D` });
