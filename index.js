@@ -16,7 +16,7 @@ const io = socketio(server);
 app.use(router);
 app.use(cors());
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://react-chat-app-back-end.herokuapp.com/"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
