@@ -22,22 +22,6 @@ app.use(function(req, res, next) {
     next();
 });
 
-// app.configure(function () {
-//     app.use(express.bodyParser());
-//     app.use(express.methodOverride());
-//     app.use(express.static(path.join(application_root, "public")));
-//     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-
-//     app.use(router);
-//     app.use(cors({credentials: true, origin: true}));
-//     app.use(function(req, res, next) {
-//         res.header('Access-Control-Allow-Origin', '*');
-//         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//         // Access to XMLHttpRequest at 'https://react-chat-app-back-end.herokuapp.com/socket.io/?EIO=3&transport=polling&t=NIKToPF&sid=y816dlf1JzozlBL5AAAD' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
-//         next();
-//     });
-//   });
-
 app.get('/', (req, res) => {
     request(
         { url: 'https://react-chat-app-back-end.herokuapp.com' },
@@ -80,4 +64,7 @@ io.on('connection', (socket) => {
     })
 })
 
-server.listen(PORT, () => console.log(`Server has started on port ${PORT}`));
+// server.listen(PORT, () => console.log(`Server has started on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`Server has started on port ${PORT}`);
+})
