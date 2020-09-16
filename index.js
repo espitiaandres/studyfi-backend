@@ -1,6 +1,4 @@
 const express = require('express');
-const socketio = require('socket.io');
-const http = require('http');
 const cors = require('cors');
 
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
@@ -10,7 +8,10 @@ const PORT = process.env.PORT || 5000;
 const router = require('./router');
 
 const app = express();
+const http = require('http').Server(app);
 const server = http.createServer(app);
+const socketio = require('socket.io')(http);
+
 const io = socketio(server,  {transports: ['websocket', 'polling', 'flashsocket']});
 
 app.use(router);
