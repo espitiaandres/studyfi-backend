@@ -2,13 +2,9 @@ const express = require('express');
 const socketio = require('socket.io');
 const http = require('http');
 const cors = require('cors');
-
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
-
 const PORT = process.env.PORT || 5000;
-
 const router = require('./router');
-
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
@@ -22,7 +18,6 @@ app.use(function(req, res, next) {
     next();
 });
 
-
 app.get('/', (req, res) => {
     request(
         { url: 'https://react-chat-app-back-end.herokuapp.com/' },
@@ -31,8 +26,6 @@ app.get('/', (req, res) => {
         }
     )
 });
-
-// socket.on in the back-end, socket.emit in the front-end
 
 io.on('connection', (socket) => {
     socket.on('join', ({ name, room }, callback) => {
