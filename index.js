@@ -22,17 +22,13 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.get('/jokes/random', (req, res) => {
-request(
-    { url: 'https://joke-api-strict-cors.appspot.com/jokes/random' },
-    (error, response, body) => {
-    if (error || response.statusCode !== 200) {
-        return res.status(500).json({ type: 'error', message: err.message });
-    }
-
-    res.json(JSON.parse(body));
-    }
-)
+app.get('/', (req, res) => {
+    request(
+        { url: 'https://react-chat-app-back-end.herokuapp.com' },
+        (error, response, body) => {
+            console.log(error, response, body);
+        }
+    )
 });
 
 // socket.on in the back-end, socket.emit in the front-end
