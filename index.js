@@ -22,7 +22,10 @@ io.on('connection', (socket) => {
     socket.on('join', ({ name, room }, callback) => {
         const { error, user } = addUser({ id: socket.id, name, room });
 
-        if (error) return callback(error);
+        // if (error) return callback(error);
+        if (error) {
+            socket.emit('duplicate', { duplicate: true });
+        }
 
         socket.emit('message', { user: "admin", text: `${user.name}, welcome to the ${user.room} chat room!` });
         socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined! :)` });
