@@ -1,4 +1,6 @@
 const express = require('express');
+const socketio = require('socket.io');
+const http = require('http');
 const cors = require('cors');
 
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
@@ -8,19 +10,16 @@ const PORT = process.env.PORT || 5000;
 const router = require('./router');
 
 const app = express();
-const http = require('http').Server(app);
 const server = http.createServer(app);
-const socketio = require('socket.io')(http);
-
-const io = socketio(server,  {transports: ['websocket', 'polling', 'flashsocket']});
+const io = socketio(server);
 
 app.use(router);
 app.use(cors());
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
