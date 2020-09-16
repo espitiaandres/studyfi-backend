@@ -24,7 +24,7 @@ app.use(function(req, res, next) {
 
 app.get('/', (req, res) => {
     request(
-        { url: 'https://react-chat-app-back-end.herokuapp.com' },
+        { url: '/https://react-chat-app-back-end.herokuapp.com' },
         (error, response, body) => {
             console.log(error, response, body);
         }
@@ -64,7 +64,4 @@ io.on('connection', (socket) => {
     })
 })
 
-// server.listen(PORT, () => console.log(`Server has started on port ${PORT}`));
-app.listen(PORT, () => {
-    console.log(`Server has started on port ${PORT}`);
-})
+server.listen(PORT, () => console.log(`Server has started on port ${PORT}`));
