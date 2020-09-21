@@ -27,16 +27,10 @@ app.get('/', (req, res) => {
     )
 });
 
-let allArtists = "";
-
 io.on('connection', (socket) => {
-    socket.on('join', ({ name, room, item }, callback) => {
-        item.artists.map((artist) => {
-            return allArtists += `| ${artist.name} |`
-        }) 
-        const { error, user } = addUser({ id: socket.id, name, room, songName: item.name, allArtists });
+    socket.on('join', ({ name, room }, callback) => {
+        const { error, user } = addUser({ id: socket.id, name, room });
 
-        // if (error) return callback(error);
         if (error) {
             socket.emit('duplicate', { duplicate: true });
             return callback(error);
@@ -62,7 +56,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);
         if (user) {
-            io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left. :(` })
+            io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left. :(`}, { users: getUsersInRoom(user.room) })
         }
     })
 })
