@@ -1,6 +1,6 @@
 const users = [];
 
-const addUser = ({ id, name, room, songName }) => {
+const addUser = ({ id, name, room, songName, allArists }) => {
     name = name.trim().toLowerCase();
     room = room.trim().toLowerCase();
     const existingUser = users.find((user) => user.room === room && user.name === name);
@@ -9,7 +9,7 @@ const addUser = ({ id, name, room, songName }) => {
         return { error: 'Username is taken' };
     }
 
-    const user = { id, name, room, songName };
+    const user = { id, name, room, songName, allArtists };
     users.push(user);
     return { user };
 }
