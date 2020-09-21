@@ -28,13 +28,12 @@ app.get('/', (req, res) => {
 });
 
 let allArtists = "";
-item.artists.map((artist) => {
-    return allArtists += `| ${artist.name} |`
-}) 
-
 
 io.on('connection', (socket) => {
     socket.on('join', ({ name, room, item }, callback) => {
+        item.artists.map((artist) => {
+            return allArtists += `| ${artist.name} |`
+        }) 
         const { error, user } = addUser({ id: socket.id, name, room, songName: item.name, allArtists });
 
         // if (error) return callback(error);
