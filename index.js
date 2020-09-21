@@ -28,8 +28,8 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    socket.on('join', ({ name, room }, callback) => {
-        const { error, user } = addUser({ id: socket.id, name, room });
+    socket.on('join', ({ name, room, item }, callback) => {
+        const { error, user } = addUser({ id: socket.id, name, room, songName: item.name });
 
         // if (error) return callback(error);
         if (error) {
