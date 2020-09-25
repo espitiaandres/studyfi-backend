@@ -33,11 +33,12 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     socket.on('join', ({ name, room, tz }, callback) => {
-        const { error, user } = addUser({ id: socket.id, name, room });
-
         tz = tz.includes("minus") ? tz.replace("minus", "+") : tz.replace("plus", "-");
         tz = "Etc/" + tz;
         tzOuterScope = tz;
+        const { error, user } = addUser({ id: socket.id, name, room, tz });
+
+        
 
         if (error) {
             socket.emit('duplicate', { duplicate: true });
@@ -50,12 +51,12 @@ io.on('connection', (socket) => {
         socket.emit('message', { 
             user: "admin", 
             text: `${user.name}, welcome to the ${user.room} chat room! :D`, 
-            currentTime: momenttz().tz(tz).format("MMM DD h:mm a").toString() 
+            currentTime: momenttz().tz(user.tz).format("MMM DD h:mm a").toString() 
         });
         socket.broadcast.to(user.room).emit('message', { 
             user: 'admin', 
             text: `${user.name} has joined! :)`, 
-            currentTime: momenttz().tz(tz).format("MMM DD h:mm a").toString() 
+            currentTime: momenttz().tz(user.tz).format("MMM DD h:mm a").toString() 
         });
         socket.join(user.room);
         io.to(user.room).emit('roomData', { 
@@ -70,7 +71,7 @@ io.on('connection', (socket) => {
         io.to(user.room).emit('message', { 
             user: user.name, 
             text: message, 
-            currentTime: momenttz().tz(tzOuterScope).format("MMM DD h:mm a").toString() 
+            currentTime: momenttz().tz(user.tzOuterScope).format("MMM DD h:mm a").toString() 
         });
         io.to(user.room).emit('roomData', { 
             room: user.room, 
@@ -85,7 +86,7 @@ io.on('connection', (socket) => {
             io.to(user.room).emit('message', { 
                 user: 'admin', 
                 text: `${user.name} has left. :(`, 
-                currentTime: momenttz().tz(tzOuterScope).format("MMM DD h:mm a").toString() }, { 
+                currentTime: momenttz().tz(user.tzOuterScope).format("MMM DD h:mm a").toString() }, { 
                     users: getUsersInRoom(user.room) 
                 }
             )
