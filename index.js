@@ -35,10 +35,12 @@ io.on('connection', (socket) => {
     socket.on('join', ({ name, room, tz }, callback) => {
         const { error, user } = addUser({ id: socket.id, name, room });
 
-        tzOuterScope = tz;
-        tz = "Etc/" + tz;
-        tz.includes("-") ? tz.replace("-", "+") : tz.replace("+", "-");
 
+        tz = tz.includes("minus") ? tz.replace("minus", "-") : tz.replace("plus", "+");
+        tz = "Etc/" + tz;
+        tz = tz.includes("-") ? tz.replace("-", "+") : tz.replace("+", "-");
+
+        tzOuterScope = tz;
 
         if (error) {
             socket.emit('duplicate', { duplicate: true });
