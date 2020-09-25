@@ -29,8 +29,6 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    let currentTime = moment().format("MMM DD h:mm a");
-    
     socket.on('join', ({ name, room }, callback) => {
         const { error, user } = addUser({ id: socket.id, name, room });
 
@@ -42,8 +40,8 @@ io.on('connection', (socket) => {
         }
 
         socket.emit('duplicate', { duplicate: false });
-        socket.emit('message', { user: "admin", text: `${user.name}, welcome to the ${user.room} chat room! :D`, currentTime });
-        socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined! :)`, currentTime });
+        socket.emit('message', { user: "admin", text: `${user.name}, welcome to the ${user.room} chat room! :D`, currentTime: moment().format("MMM DD h:mm a") });
+        socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined! :)`, currentTime: moment().format("MMM DD h:mm a") });
         socket.join(user.room);
         io.to(user.room).emit('roomData', { room: user.room , users: getUsersInRoom(user.room)})
         callback();
@@ -51,7 +49,7 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id);
-        io.to(user.room).emit('message', { user: user.name, text: message, currentTime });
+        io.to(user.room).emit('message', { user: user.name, text: message, currentTime: moment().format("MMM DD h:mm a") });
         io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
         callback();
     });
@@ -59,7 +57,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);
         if (user) {
-            io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left. :(`, currentTime }, { users: getUsersInRoom(user.room) })
+            io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left. :(`, currentTime: moment().format("MMM DD h:mm a") }, { users: getUsersInRoom(user.room) })
         }
     })
 })
