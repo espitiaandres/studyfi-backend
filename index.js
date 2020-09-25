@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
         io.to(user.room).emit('message', { 
             user: user.name, 
             text: message, 
-            currentTime: momenttz().tz(user.tzOuterScope).format("MMM DD h:mm a").toString() 
+            currentTime: momenttz().tz(user.tz).format("MMM DD h:mm a").toString() 
         });
         io.to(user.room).emit('roomData', { 
             room: user.room, 
@@ -86,7 +86,7 @@ io.on('connection', (socket) => {
             io.to(user.room).emit('message', { 
                 user: 'admin', 
                 text: `${user.name} has left. :(`, 
-                currentTime: momenttz().tz(user.tzOuterScope).format("MMM DD h:mm a").toString() }, { 
+                currentTime: momenttz().tz(user.tz).format("MMM DD h:mm a").toString() }, { 
                     users: getUsersInRoom(user.room) 
                 }
             )
