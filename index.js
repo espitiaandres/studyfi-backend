@@ -30,8 +30,10 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    socket.on('join', ({ name, room }, callback) => {
+    socket.on('join', ({ name, room, tz }, callback) => {
         const { error, user } = addUser({ id: socket.id, name, room });
+
+        tz.includes("-") ? tz.replace("-", "+") : tz.replace("+", "-");
 
         if (error) {
             socket.emit('duplicate', { duplicate: true });
