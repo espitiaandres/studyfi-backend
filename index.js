@@ -11,6 +11,8 @@ const io = socketio(server);
 const moment = require('moment');
 const momenttz = require('moment-timezone');
 
+let tzOuterScope = "";
+
 app.use(router);
 app.use(cors({credentials: true, origin: true}));
 app.use(function(req, res, next) {
@@ -33,6 +35,7 @@ io.on('connection', (socket) => {
     socket.on('join', ({ name, room, tz }, callback) => {
         const { error, user } = addUser({ id: socket.id, name, room });
 
+        tzOuterScope = tz;
         tz = "Etc/" + tz;
         tz.includes("-") ? tz.replace("-", "+") : tz.replace("+", "-");
 
@@ -54,7 +57,7 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id);
-        io.to(user.room).emit('message', { user: user.name, text: message, currentTime: momenttz().tz(tz).format("MMM DD h:mm a").toString() + " UTC" });
+        io.to(user.room).emit('message', { user: user.name, text: message, currentTime: momenttz().tz(tzOuterScope).format("MMM DD h:mm a").toString() + " UTC" });
         io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
         callback();
     });
@@ -62,7 +65,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);
         if (user) {
-            io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left. :(`, currentTime: momenttz().tz(tz).format("MMM DD h:mm a").toString() + " UTC" }, { users: getUsersInRoom(user.room) })
+            io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left. :(`, currentTime: momenttz().tz(tzOuterScope).format("MMM DD h:mm a").toString() + " UTC" }, { users: getUsersInRoom(user.room) })
         }
     })
 })
