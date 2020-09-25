@@ -9,6 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 const moment = require('moment');
+const momenttz = require('moment-timezone');
 
 app.use(router);
 app.use(cors({credentials: true, origin: true}));
@@ -40,8 +41,8 @@ io.on('connection', (socket) => {
         }
 
         socket.emit('duplicate', { duplicate: false });
-        socket.emit('message', { user: "admin", text: `${user.name}, welcome to the ${user.room} chat room! :D`, currentTime: moment().utc([2011, 0, 1, 8]).local().format("MMM DD h:mm a") });
-        socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined! :)`, currentTime: moment().utc([2011, 0, 1, 8]).local().format("MMM DD h:mm a") });
+        socket.emit('message', { user: "admin", text: `${user.name}, welcome to the ${user.room} chat room! :D`, currentTime: momenttz().tz(momenttz().tz.guess()).format("MMM DD h:mm a") /*moment().utc().local().format("MMM DD h:mm a")*/ });
+        socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined! :)`, currentTime: momenttz().tz(momenttz().tz.guess()).format("MMM DD h:mm a") /*moment().utc().local().format("MMM DD h:mm a")*/ });
         socket.join(user.room);
         io.to(user.room).emit('roomData', { room: user.room , users: getUsersInRoom(user.room)})
         callback();
@@ -49,7 +50,7 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id);
-        io.to(user.room).emit('message', { user: user.name, text: message, currentTime: moment().utc([2011, 0, 1, 8]).local().format("MMM DD h:mm a") });
+        io.to(user.room).emit('message', { user: user.name, text: message, currentTime: momenttz().tz(momenttz().tz.guess()).format("MMM DD h:mm a") /*moment().utc().local().format("MMM DD h:mm a")*/ });
         io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
         callback();
     });
@@ -57,7 +58,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);
         if (user) {
-            io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left. :(`, currentTime: moment().utc([2011, 0, 1, 8]).local().format("MMM DD h:mm a") }, { users: getUsersInRoom(user.room) })
+            io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left. :(`, currentTime: momenttz().tz(momenttz().tz.guess()).format("MMM DD h:mm a") /*moment().utc().local().format("MMM DD h:mm a")*/ }, { users: getUsersInRoom(user.room) })
         }
     })
 })
