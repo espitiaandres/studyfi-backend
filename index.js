@@ -33,7 +33,9 @@ io.on('connection', (socket) => {
     socket.on('join', ({ name, room, tz }, callback) => {
         const { error, user } = addUser({ id: socket.id, name, room });
 
+        tz = "Etc/" + tz;
         tz.includes("-") ? tz.replace("-", "+") : tz.replace("+", "-");
+
 
         if (error) {
             socket.emit('duplicate', { duplicate: true });
