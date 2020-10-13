@@ -42,12 +42,14 @@ io.on('connection', (socket) => {
         socket.emit('message', { 
             user: "admin", 
             text: `${user.name}, welcome to the ${user.room} chat room! :D`, 
-            currentTime: '' 
+            currentTime: '',
+            room: user.room
         });
         socket.broadcast.to(user.room).emit('message', { 
             user: 'admin', 
             text: `${user.name} has joined! :)`, 
-            currentTime: ''
+            currentTime: '',
+            room: user.room
         });
         socket.join(user.room);
         io.to(user.room).emit('roomData', { 
@@ -62,7 +64,8 @@ io.on('connection', (socket) => {
         io.to(user.room).emit('message', { 
             user: user.name, 
             text: message, 
-            currentTime: ''
+            currentTime: '',
+            room: user.room
         });
         io.to(user.room).emit('roomData', { 
             room: user.room, 
@@ -77,7 +80,8 @@ io.on('connection', (socket) => {
             io.to(user.room).emit('message', { 
                 user: 'admin', 
                 text: `${user.name} has left. :(`, 
-                currentTime: '' 
+                currentTime: '',
+                room: user.room
             }, { 
                 users: getUsersInRoom(user.room) 
             })
