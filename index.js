@@ -85,6 +85,11 @@ io.on('connection', (socket) => {
             }, { 
                 users: getUsersInRoom(user.room) 
             })
+
+            io.to(user.room).emit('roomData', { 
+                room: user.room , 
+                users: getUsersInRoom(user.room) 
+            })
         }
     })
 })
