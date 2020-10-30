@@ -34,8 +34,6 @@ io.on('connection', (socket) => {
         if (error) {
             socket.emit('duplicate', { duplicate: true });
             return callback(error);
-        } else {
-            socket.emit('duplicate', { duplicate: false });
         }
 
         socket.emit('duplicate', { duplicate: false });
